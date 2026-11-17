@@ -5,8 +5,16 @@ import {
   UploadedFileItem,
   UserPreferences,
   ModelInfo,
-  ResearchResponse
+  ResearchResponse,
+  EmailNotification
 } from '../types';
+
+export interface AuthResponse {
+  access_token: string;
+  token_type?: string;
+  user: User;
+  email_notification?: EmailNotification;
+}
 
 const API_BASE = '/api';
 
@@ -23,13 +31,13 @@ function getHeaders(customHeaders: Record<string, string> = {}): HeadersInit {
 
 export const api = {
   // Auth
-  async loginDemo(): Promise<{ access_token: string; user: User }> {
+  async loginDemo(): Promise<AuthResponse> {
     const res = await fetch(`${API_BASE}/auth/demo`);
     if (!res.ok) throw new Error('Demo login failed');
     return res.json();
   },
 
-  async login(email: string, password: string): Promise<{ access_token: string; user: User }> {
+  async login(email: string, password: string): Promise<AuthResponse> {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -42,7 +50,7 @@ export const api = {
     return res.json();
   },
 
-  async register(name: string, email: string, password: string): Promise<{ access_token: string; user: User }> {
+  async register(name: string, email: string, password: string): Promise<AuthResponse> {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
